@@ -2,8 +2,15 @@
 clickhouse:
   hosts:
     clickhouse-01:
-      ansible_connection: docker
+      ansible_host: 51.250.71.189
+      ansible_user: fedora
 vector:
   hosts:
     vector-01:
-      ansible_connection: docker
+      ansible_host: 158.160.52.165
+      ansible_user: fedora
+lighthouse:
+  hosts:
+    lighthouse-01:
+      ansible_host: 89.169.139.14 
+      ansible_user: fedora
