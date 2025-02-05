@@ -18,8 +18,8 @@
         disable_gpg_check: true
 
     - name: Reload Systemd Manager Configuration
-      ansible.builtin.command: systemctl daemon-reload
-      changed_when: false
+      ansible.builtin.systemd:
+        daemon_reload: true
 
     - name: Ensure ClickHouse Service Is Enabled And Started
       ansible.builtin.service:
