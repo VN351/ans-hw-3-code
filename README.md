@@ -120,7 +120,7 @@
       hosts:
         lighthouse-01:
           ansible_host: 158.160.52.165
-        ansible_user: fedora
+          ansible_user: fedora
     ```
 3. **Запустите Playbook:**
     ```bash
