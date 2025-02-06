@@ -28,6 +28,12 @@
   - Применяет пользовательские конфигурации Vector через шаблоны.
   - Управляет сервисом Vector.
 
+- **Установка Lighthouse:**
+  - Устанавливает и настраивает Nginx.
+  - Клонирует репозиторий приложения в необходимую директорию.
+  - Применяет пользовательские конфигурации Nginx и Lighthouse.
+  - Управляет сервисом Lighthouse.
+
 ## Требования
 
 - **Ansible:** Версия 2.9 или выше.
@@ -43,14 +49,17 @@
   ans-hw-2-code/
   ├── group_vars/
   │   ├── clickhouse/
-  |   |   └── vars.yml          
+  |   |   └── vars.yml 
+  |   ├── lighthouse/
+  |   |   └── vars.yml         
   │   └── vector
   |       └── vars.yml
   ├── inventory/
   │   └── prod.yml
   ├── templates/
-  │   ├── vector.yml.j2
-  │   └── vector.service.j2
+  │   ├── lighthouse.conf.j2
+  |   ├── nginx.conf.j2
+  │   └── vector.toml.j2
   ├── site.yml
   └── README.md
   ```
@@ -70,35 +79,49 @@
 | clickhouse_version    | Версия ClickHouse для установки.                     | 22.3.3.44                   |
 | clickhouse_packages   | Список пакетов ClickHouse для скачивания и установки.| ["clickhouse-client", "clickhouse-server"] |
 
+### Переменные Lighthouse
+
+| Переменная              | Описание                                             | Пример                       |
+|-------------------------|------------------------------------------------------|------------------------------|
+| lighthouse_git   | Ссылка на репозиторий приложения для клонирования.           | https://github.com/VKCOM/lighthouse.git44                   |
+| lighthouse_dir   | Дирректория для клонирования приложения. | /etc/nginx/lighthouse |
+
 ### Переменные Vector
 
 | Переменная            | Описание                                            | Пример                                                             |
 |-----------------------|-----------------------------------------------------|--------------------------------------------------------------------|
 | vector_url          | URL для скачивания RPM-пакета Vector.               | https://packages.timber.io/vector/0.22.3/vector-0.22.3-1.x86_64.rpm   |
 | vector_version      | Версия Vector для установки.                        | 0.22.3                                                           |
-| vector_config_dir   | Директория, где находятся конфигурационные файлы Vector.| /etc/vector                                                   |
 
 
 ## Использование
 
 1. **Клонируйте репозиторий:**
     ```bash
-    git clone https://github.com/VN351/ans-hw-2-code.git
-    cd ans-hw-2-code
+    git clone https://github.com/VN351/ans-hw-3-code.git
+    cd ans-hw-3-code
     ```
 2. **Настройте инвентарь:**
-   Отредактируйте файл templates/prod.yml, добавив ваши хосты ClickHouse и Vector.
+   Отредактируйте файл templates/prod.yml, добавив ваши хосты ClickHouse, Vector и Lighthouse.
    **Пример templates/prod.yml:**
-   ```yml
-   clickhouse:
-     hosts:
-       clickhouse-01:
-         ansible_connection: docker
-   vector:
-     hosts:
-       vector-01:
-         ansible_connection: docker
-   ```
+    ```yml
+    ---
+    clickhouse:
+      hosts:
+        clickhouse-01:
+          ansible_host: 51.250.0.122
+          ansible_user: fedora
+    vector:
+      hosts:
+        vector-01:
+          ansible_host: 89.169.131.240
+          ansible_user: fedora
+    lighthouse:
+      hosts:
+        lighthouse-01:
+          ansible_host: 158.160.52.165
+        ansible_user: fedora
+    ```
 3. **Запустите Playbook:**
     ```bash
     ansible-playbook -i templates/prod.yml site.yml
